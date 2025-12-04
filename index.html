@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad Práctica 1: El Caso del Streamer</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config for Brand Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            purple: '#9b4d96',
+                            teal: '#50b898',
+                            navy: '#1d264f',
+                            yellow: '#fecb00',
+                            light: '#f4fbf9'
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f0f4f8;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Custom Scrollbar for modals */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .hotspot {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hotspot:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 0 15px rgba(254, 203, 0, 0.8);
+        }
+        
+        .chat-bubble {
+            position: relative;
+            background: #ffffff;
+            border-radius: .4em;
+        }
+        .chat-bubble:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-right-color: #ffffff;
+            border-left: 0;
+            border-top: 0;
+            margin-top: -5px;
+            margin-left: -10px;
+        }
+
+        /* Post Styles */
+        .fb-post {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-brand-navy min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+
+    <!-- App Container -->
+    <div id="app" class="w-full max-w-4xl relative h-[85vh] flex flex-col">
+        
+        <!-- Header / Progress Bar -->
+        <header class="w-full flex justify-between items-center mb-4 px-4">
+            <div class="flex items-center gap-2">
+                <div class="bg-brand-purple text-white p-2 rounded-lg font-bold shadow-md">
+                    <i class="fas fa-search mr-2"></i>Detectives Digitales
+                </div>
+            </div>
+            <div class="hidden md:flex gap-2">
+                <div id="step1-indicator" class="h-2 w-16 bg-gray-300 rounded-full transition-all duration-500"></div>
+                <div id="step2-indicator" class="h-2 w-16 bg-gray-300 rounded-full transition-all duration-500"></div>
+                <div id="step3-indicator" class="h-2 w-16 bg-gray-300 rounded-full transition-all duration-500"></div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 relative w-full h-full perspective-1000">
+
+            <!-- SCENE 1: THE MISSION (INTRO) -->
+            <section id="scene-1" class="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 z-30">
+                <div class="glass-panel rounded-3xl p-8 md:p-12 text-center max-w-2xl w-full mx-4 animate-float border-b-8 border-brand-teal">
+                    <div class="inline-block p-4 rounded-full bg-brand-yellow mb-6 shadow-lg">
+                        <i class="fas fa-gamepad text-4xl text-brand-navy"></i>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-black text-brand-purple mb-4">
+                        ACTIVIDAD PRÁCTICA 1:<br>EL CASO DEL STREAMER
+                    </h1>
+                    
+                    <div class="bg-blue-50 p-6 rounded-xl text-left shadow-inner mb-8 border-l-4 border-brand-navy relative">
+                        <div class="absolute -left-3 top-6 bg-white rounded-full p-1 border-2 border-brand-navy">
+                            <i class="fas fa-user-secret text-brand-navy"></i>
+                        </div>
+                        <p class="font-bold text-brand-teal mb-2 text-sm uppercase tracking-wider">Nuevo mensaje de: Amigo Gamer</p>
+                        <p class="text-lg md:text-xl leading-relaxed typing-effect">
+                            "¡Hey! Imagina que es el <strong>Día del Gamer</strong>. Estamos en la feria y no sabes qué jugar... ¡Mira lo que me mandó Rubius! ¿Lo probamos?"
+                        </p>
+                    </div>
+
+                    <button onclick="app.startMission()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-teal font-lg rounded-full hover:bg-teal-600 hover:shadow-xl hover:-translate-y-1 focus:outline-none ring-offset-2 focus:ring-2 ring-brand-teal">
+                        <span>¡Detective, tienes un caso!</span>
+                        <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
+                        <div class="absolute inset-0 rounded-full ring-4 ring-white/20 group-hover:ring-white/40 transition-all"></div>
+                    </button>
+                    <!-- <p class="mt-4 text-sm text-gray-500 font-bold">Tiempo estimado: 40 min</p> -->
+                </div>
+            </section>
+
+            <!-- SCENE 2: ANALYSIS (INTERACTIVE POST) -->
+            <section id="scene-2" class="absolute inset-0 flex flex-col md:flex-row items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-500 z-20">
+                
+                <!-- Instructions Sidebar -->
+                <div class="md:w-1/3 order-2 md:order-1">
+                    <div class="glass-panel p-6 rounded-2xl border-l-8 border-brand-yellow">
+                        <h3 class="text-xl font-bold text-brand-navy mb-3"><i class="fas fa-magnifying-glass mr-2"></i>Tu Misión</h3>
+                        <p class="mb-4 text-gray-700">Analiza la evidencia. Haz clic en los íconos <strong class="text-brand-purple text-xl">(+)</strong> para investigar las pistas.</p>
+                        
+                        <div class="space-y-3">
+                            <div id="tracker-1" class="flex items-center gap-3 p-3 bg-white rounded-lg opacity-50 transition-all">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">1</div>
+                                <span class="font-bold text-sm">La Fuente</span>
+                            </div>
+                            <div id="tracker-2" class="flex items-center gap-3 p-3 bg-white rounded-lg opacity-50 transition-all">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">2</div>
+                                <span class="font-bold text-sm">La Intención</span>
+                            </div>
+                            <div id="tracker-3" class="flex items-center gap-3 p-3 bg-white rounded-lg opacity-50 transition-all">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">3</div>
+                                <span class="font-bold text-sm">La Decisión</span>
+                            </div>
+                        </div>
+
+                        <button id="btn-finish-analysis" onclick="app.finishAnalysis()" class="w-full mt-6 py-3 bg-brand-navy text-white rounded-xl font-bold shadow-lg opacity-50 cursor-not-allowed transition-all" disabled>
+                            Redactar Informe Final
+                        </button>
+                    </div>
+                </div>
+
+                <!-- The Post (Evidence) -->
+                <div class="md:w-2/3 w-full max-w-md order-1 md:order-2 relative">
+                    
+                    <!-- Simulated FB Post -->
+                    <div class="fb-post relative transform transition-transform hover:scale-[1.01] duration-300">
+                        <!-- Header -->
+                        <div class="p-4 flex items-start gap-3 border-b border-gray-100">
+                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden relative">
+                                <img src="/api/placeholder/40/40" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-1 relative">
+                                    <h4 class="font-bold text-brand-navy">elrubiusOMG</h4>
+                                    <span class="text-blue-500 text-sm"><i class="fas fa-check-circle"></i></span>
+                                    
+                                    <!-- HOTSPOT 1: SOURCE -->
+                                    <button onclick="app.openClue(1)" id="hotspot-1" class="hotspot absolute -right-2 -top-2 w-8 h-8 bg-brand-purple text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer z-10 hover:bg-purple-600 animate-pulse-fast border-2 border-white">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <div class="text-xs text-gray-500">16 de junio • <i class="fas fa-earth-americas"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="p-4 text-sm text-gray-800 leading-relaxed relative">
+                            <p class="mb-2">
+                                Chavales, el otro dia <span class="bg-yellow-100 px-1">vino Playstation a mi casa</span> y grabamos un video hablando sobre The Last of Us!
+                            </p>
+                            <p>
+                                Tambien hay <span class="bg-yellow-100 px-1">concurso</span> para ganar una PS4 Pro exclusiva, asi que yatusabeh 😎
+                            </p>
+                            <p class="text-blue-600 mt-1 text-xs">https://youtu.be/nRYXrAOZqm4</p>
+                            
+                            <!-- HOTSPOT 2: INTENT -->
+                            <button onclick="app.openClue(2)" id="hotspot-2" class="hotspot absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer z-10 hover:bg-teal-600 animate-pulse-fast border-2 border-white">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+
+                        <!-- Media Area -->
+                        <div class="relative bg-black w-full h-48 flex items-center justify-center overflow-hidden group">
+                            <!-- Background Placeholder for Game Image -->
+                            <div class="absolute inset-0 bg-gray-800 opacity-60"></div>
+                            <!-- Mock Content -->
+                            <div class="relative z-0 text-center text-white p-4 w-full">
+                                <div class="flex items-center justify-center mb-2 text-4xl">
+                                    <i class="fab fa-playstation mr-2"></i> 
+                                    <span class="font-bold tracking-tighter">THE LAST OF US</span>
+                                </div>
+                                <div class="text-yellow-400 font-bold tracking-widest text-xs uppercase">Revisitado - Episodio 4</div>
+                                <div class="mt-4 w-12 h-12 rounded-full bg-red-600 mx-auto flex items-center justify-center shadow-lg">
+                                    <i class="fas fa-play ml-1 text-sm"></i>
+                                </div>
+                            </div>
+
+                             <!-- HOTSPOT 3: DECISION -->
+                             <button onclick="app.openClue(3)" id="hotspot-3" class="hotspot absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-brand-yellow text-brand-navy rounded-full flex items-center justify-center shadow-xl cursor-pointer z-10 hover:bg-yellow-400 animate-pulse-fast border-4 border-white">
+                                <i class="fas fa-question text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="bg-gray-50 px-4 py-2 border-t flex justify-between text-gray-500 text-xs font-bold">
+                            <span>YOUTUBE.COM</span>
+                            <span>PlayStation España</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCENE 3: REPORT (CONCLUSION) -->
+            <section id="scene-3" class="absolute inset-0 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-20">
+                <div class="glass-panel w-full max-w-2xl rounded-3xl p-8 border-t-8 border-brand-purple shadow-2xl overflow-hidden relative">
+                    <!-- Confetti CSS Effect Placeholder -->
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i class="fas fa-certificate text-9xl text-brand-navy"></i>
+                    </div>
+
+                    <h2 class="text-3xl font-black text-brand-navy mb-6 text-center border-b pb-4">
+                        <i class="fas fa-clipboard-check text-brand-teal mr-2"></i>INFORME DEL CASO
+                    </h2>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-brand-purple flex items-start gap-4">
+                            <div class="bg-brand-purple text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">1</div>
+                            <div>
+                                <h4 class="font-bold text-gray-400 text-xs uppercase tracking-wider">La Fuente</h4>
+                                <p class="font-bold text-lg text-brand-navy">'elrubiusOMG' <span class="text-blue-500"><i class="fas fa-check-circle"></i></span></p>
+                                <p class="text-sm text-gray-600">Cuenta Verificada = Identidad confirmada (no necesariamente neutralidad).</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-brand-teal flex items-start gap-4">
+                            <div class="bg-brand-teal text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold">2</div>
+                            <div>
+                                <h4 class="font-bold text-gray-400 text-xs uppercase tracking-wider">La Intencionalidad</h4>
+                                <p class="font-bold text-lg text-brand-navy">Publicidad / Patrocinio</p>
+                                <p class="text-sm text-gray-600">Pistas: Mención de marca ("Playstation") y "Concurso".</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-yellow-50 p-4 rounded-xl shadow-inner border border-yellow-200 text-center">
+                            <h4 class="font-bold text-brand-navy mb-2">VEREDICTO DEL DETECTIVE</h4>
+                            <p class="text-gray-700 italic">"¡Buen trabajo! Has usado las pistas para descubrir el origen y la intención. Aprendiste que incluso una fuente verificada puede tener una intención comercial."</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="mt-4 text-brand-teal font-bold cursor-pointer hover:underline text-lg bg-white/50 px-6 py-3 rounded-full inline-block transition-all hover:bg-white hover:shadow-md" onclick="app.reset()">
+                            <i class="fas fa-redo mr-2"></i> Empezar nuevamente
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+
+    <!-- MODAL OVERLAY -->
+    <div id="clue-modal" class="fixed inset-0 bg-brand-navy/80 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300" id="modal-content">
+            <!-- Modal Header -->
+            <div id="modal-header" class="bg-brand-purple p-4 text-white flex justify-between items-center">
+                <h3 id="modal-title" class="font-black text-lg tracking-wide uppercase">PISTA 1</h3>
+                <button onclick="app.closeModal()" class="hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6">
+                <!-- Explanation Phase -->
+                <div id="modal-explanation" class="mb-6">
+                    <p id="explanation-text" class="text-gray-700 text-lg leading-relaxed"></p>
+                </div>
+
+                <!-- Quiz Phase -->
+                <div id="modal-quiz" class="space-y-4">
+                    <p class="font-bold text-brand-navy border-b pb-2 mb-4"><i class="fas fa-question-circle mr-2 text-brand-teal"></i>Pregunta de Análisis:</p>
+                    <p id="quiz-question" class="text-gray-800 font-medium mb-4"></p>
+                    
+                    <div id="quiz-options" class="space-y-3">
+                        <!-- Options injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Feedback Area (Hidden initially) -->
+                <div id="modal-feedback" class="hidden mt-4 p-4 rounded-lg bg-gray-100 border-l-4">
+                    <div id="feedback-icon" class="mb-2 text-2xl"></div>
+                    <p id="feedback-text" class="text-sm font-bold"></p>
+                    <button id="btn-next-clue" onclick="app.solveClue()" class="mt-4 w-full bg-brand-navy text-white py-2 rounded-lg font-bold hover:bg-blue-900 hidden">
+                        ¡Entendido! <i class="fas fa-check ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        const app = {
+            currentScene: 1,
+            cluesFound: [],
+            currentClueId: null,
+
+            // Data for the 3 Clues
+            clues: {
+                1: {
+                    title: "PISTA 1: LA FUENTE (¿QUIÉN ES?)",
+                    color: "bg-brand-purple",
+                    explanation: "La primera pregunta es: <strong>¿Quién es la fuente?</strong> Vemos que es 'elrubiusOMG' y tiene un 'check' azul de cuenta verificada.",
+                    question: "Según lo que aprendiste, ¿qué significa realmente esa 'Cuenta Verificada'?",
+                    options: [
+                        { id: 'A', text: "Que todo lo que dice es 100% verdad y el juego es el mejor.", correct: false },
+                        { id: 'B', text: "Que la plataforma ha confirmado que la cuenta pertenece realmente a 'elrubiusOMG'.", correct: true },
+                        { id: 'C', text: "Que Playstation pagó para que la cuenta fuera verificada.", correct: false }
+                    ],
+                    feedback: {
+                        correct: "¡Correcto! La verificación confirma la IDENTIDAD de la fuente. Sabemos que es él. Pero eso no nos dice nada sobre su intención o si es neutral.",
+                        incorrect: "¡Cuidado! La marca solo confirma la IDENTIDAD (que es el verdadero Rubius). No garantiza verdad ni neutralidad."
+                    }
+                },
+                2: {
+                    title: "PISTA 2: LA INTENCIONALIDAD (¿POR QUÉ?)",
+                    color: "bg-brand-teal",
+                    explanation: "Ahora analiza el mensaje. Lee las pistas en el texto: '...vino Playstation a mi casa...' y '...concurso para ganar...'",
+                    question: "Considerando estas pistas, ¿cuál es la intención más probable de este post?",
+                    options: [
+                        { id: 'A', text: "Es una opinión 100% personal y neutral sobre un juego que le gusta.", correct: false },
+                        { id: 'B', text: "Es contenido patrocinado (Publicidad). La intención es promocionar el juego.", correct: true },
+                        { id: 'C', text: "Solo quiere presumir que Playstation lo visitó.", correct: false }
+                    ],
+                    feedback: {
+                        correct: "¡Exacto! Cuando una marca está involucrada y hay un 'concurso', es una señal clara de Publicidad. La intención es PROMOCIONAR.",
+                        incorrect: "Vuelve a mirar. La presencia de la marca 'Playstation' y un 'concurso' son pistas de Contenido Patrocinado."
+                    }
+                },
+                3: {
+                    title: "PISTA 3: LA DECISIÓN (¿QUÉ HAGO?)",
+                    color: "bg-brand-yellow",
+                    explanation: "Resumamos: La fuente es famosa y verificada, pero su intención es publicitaria.",
+                    question: "Sabiendo esto, ¿es 'The Last of Us' un buen juego para probar en la feria?",
+                    options: [
+                        { id: 'A', text: "Sí, porque Rubius es experto y si lo promociona es bueno.", correct: false },
+                        { id: 'B', text: "No, porque si es publicidad seguro el juego es malo.", correct: false },
+                        { id: 'C', text: "No puedo saberlo solo con este post. Necesito comparar otras fuentes.", correct: true }
+                    ],
+                    feedback: {
+                        correct: "¡Pensamiento de detective! Este post es una pista promocional. Necesitas aplicar Lectura Lateral y buscar otras fuentes.",
+                        incorrect: "¡Alto ahí! Estás saltando a conclusiones. Que sea publicidad no lo hace malo ni bueno automáticamente. Necesitas más información."
+                    }
+                }
+            },
+
+            init() {
+                // Initialize anims or checks
+                this.updateUI();
+            },
+
+            startMission() {
+                this.transitionToScene(2);
+            },
+
+            transitionToScene(sceneId) {
+                // Hide all scenes
+                document.querySelectorAll('section').forEach(el => {
+                    el.classList.add('opacity-0', 'pointer-events-none');
+                    el.classList.remove('z-30');
+                });
+
+                // Show target scene
+                const target = document.getElementById(`scene-${sceneId}`);
+                target.classList.remove('opacity-0', 'pointer-events-none');
+                target.classList.add('z-30');
+                
+                // Update Progress Bar
+                this.updateProgress(sceneId);
+
+                this.currentScene = sceneId;
+            },
+
+            updateProgress(step) {
+                const indicators = [1,2,3];
+                indicators.forEach(i => {
+                    const el = document.getElementById(`step${i}-indicator`);
+                    if(i <= step) {
+                        el.classList.remove('bg-gray-300');
+                        el.classList.add('bg-brand-teal');
+                    } else {
+                        el.classList.add('bg-gray-300');
+                        el.classList.remove('bg-brand-teal');
+                    }
+                });
+            },
+
+            openClue(id) {
+                if (this.cluesFound.includes(id)) return; // Already solved
+
+                this.currentClueId = id;
+                const data = this.clues[id];
+                
+                // Populate Modal
+                const header = document.getElementById('modal-header');
+                header.className = `p-4 text-white flex justify-between items-center ${data.color}`; // Dynamic color
+                if(id === 3) header.classList.replace('text-white', 'text-brand-navy'); // Yellow needs dark text
+
+                document.getElementById('modal-title').textContent = data.title;
+                document.getElementById('explanation-text').innerHTML = data.explanation;
+                document.getElementById('quiz-question').textContent = data.question;
+
+                // Reset Quiz State
+                const optionsContainer = document.getElementById('quiz-options');
+                optionsContainer.innerHTML = '';
+                document.getElementById('modal-feedback').classList.add('hidden');
+                
+                data.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-3 border-2 border-gray-200 rounded-lg hover:border-brand-purple hover:bg-purple-50 transition-all font-medium text-sm md:text-base";
+                    btn.textContent = `${opt.id}. ${opt.text}`;
+                    btn.onclick = () => this.checkAnswer(opt, btn);
+                    optionsContainer.appendChild(btn);
+                });
+
+                // Show Modal
+                const modal = document.getElementById('clue-modal');
+                modal.classList.remove('hidden');
+                // Small timeout for fade in
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    document.getElementById('modal-content').classList.remove('scale-95');
+                    document.getElementById('modal-content').classList.add('scale-100');
+                }, 10);
+            },
+
+            closeModal() {
+                const modal = document.getElementById('clue-modal');
+                modal.classList.add('opacity-0');
+                document.getElementById('modal-content').classList.remove('scale-100');
+                document.getElementById('modal-content').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            },
+
+            checkAnswer(option, btnElement) {
+                const data = this.clues[this.currentClueId];
+                const feedbackBox = document.getElementById('modal-feedback');
+                const feedbackText = document.getElementById('feedback-text');
+                const nextBtn = document.getElementById('btn-next-clue');
+
+                // Reset button styles
+                const allBtns = document.getElementById('quiz-options').children;
+                for(let b of allBtns) b.classList.remove('bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500');
+
+                feedbackBox.classList.remove('hidden', 'bg-green-100', 'border-green-500', 'bg-red-100', 'border-red-500', 'text-green-800', 'text-red-800');
+                
+                if (option.correct) {
+                    btnElement.classList.add('bg-green-100', 'border-green-500');
+                    feedbackBox.classList.add('bg-green-50', 'border-green-500', 'text-green-800');
+                    feedbackText.textContent = data.feedback.correct;
+                    nextBtn.classList.remove('hidden');
+                } else {
+                    btnElement.classList.add('bg-red-100', 'border-red-500');
+                    feedbackBox.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+                    feedbackText.textContent = data.feedback.incorrect;
+                    nextBtn.classList.add('hidden');
+                }
+            },
+
+            solveClue() {
+                if(!this.cluesFound.includes(this.currentClueId)) {
+                    this.cluesFound.push(this.currentClueId);
+                }
+                
+                this.closeModal();
+                this.updateUI();
+            },
+
+            updateUI() {
+                // Update trackers
+                this.cluesFound.forEach(id => {
+                    const tracker = document.getElementById(`tracker-${id}`);
+                    tracker.classList.remove('opacity-50');
+                    tracker.classList.add('opacity-100', 'border-l-4', 'border-green-500', 'shadow-md');
+                    tracker.querySelector('div').innerHTML = '<i class="fas fa-check text-white"></i>';
+                    tracker.querySelector('div').classList.replace('bg-gray-200', 'bg-green-500');
+                    
+                    // Hide hotspot from post or make it green
+                    const hotspot = document.getElementById(`hotspot-${id}`);
+                    hotspot.classList.replace('bg-brand-purple', 'bg-green-500');
+                    hotspot.classList.replace('bg-brand-teal', 'bg-green-500');
+                    hotspot.classList.replace('bg-brand-yellow', 'bg-green-500');
+                    hotspot.classList.remove('animate-pulse-fast');
+                    hotspot.innerHTML = '<i class="fas fa-check"></i>';
+                });
+
+                // Enable Final Button if all clues found
+                if(this.cluesFound.length >= 3) {
+                    const btn = document.getElementById('btn-finish-analysis');
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-brand-navy');
+                    btn.classList.add('bg-brand-purple', 'animate-bounce-slow', 'hover:bg-purple-800');
+                }
+            },
+
+            finishAnalysis() {
+                this.transitionToScene(3);
+            },
+
+            reset() {
+                this.cluesFound = [];
+                this.currentScene = 1;
+                
+                // Reset UI elements manually
+                [1,2,3].forEach(id => {
+                    const t = document.getElementById(`tracker-${id}`);
+                    t.className = "flex items-center gap-3 p-3 bg-white rounded-lg opacity-50 transition-all";
+                    t.querySelector('div').className = "w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold";
+                    t.querySelector('div').textContent = id;
+
+                    const h = document.getElementById(`hotspot-${id}`);
+                    // Re-apply original classes (simplified)
+                    if(id==1) h.className = "hotspot absolute -right-2 -top-2 w-8 h-8 bg-brand-purple text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer z-10 hover:bg-purple-600 animate-pulse-fast border-2 border-white";
+                    if(id==2) h.className = "hotspot absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-brand-teal text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer z-10 hover:bg-teal-600 animate-pulse-fast border-2 border-white";
+                    if(id==3) h.className = "hotspot absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-brand-yellow text-brand-navy rounded-full flex items-center justify-center shadow-xl cursor-pointer z-10 hover:bg-yellow-400 animate-pulse-fast border-4 border-white";
+                    h.innerHTML = id === 3 ? '<i class="fas fa-question text-xl"></i>' : '<i class="fas fa-plus"></i>';
+                });
+
+                document.getElementById('btn-finish-analysis').disabled = true;
+                document.getElementById('btn-finish-analysis').classList.add('opacity-50', 'cursor-not-allowed');
+
+                this.transitionToScene(1);
+            }
+        };
+
+        // Initialize app
+        app.init();
+    </script>
+</body>
+</html>
