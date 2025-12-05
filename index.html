@@ -134,7 +134,7 @@
             
             <!-- NEW: Concept Review Button -->
             <button onclick="app.toggleConcepts()" class="bg-brand-yellow text-brand-navy px-3 py-2 rounded-full font-black text-xs md:text-sm shadow-md hover:bg-yellow-300 transition-colors flex items-center gap-2">
-                <i class="fas fa-book-open"></i> Conceptos
+                <i class="fas fa-book-open"></i> Conceptos Clave
             </button>
 
             <div class="hidden md:flex gap-2">
@@ -173,7 +173,7 @@
                         <span>¡Aceptar Misión!</span>
                         <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
                     </button>
-                    <!-- <p class="mt-4 text-xs text-gray-500 font-bold">Tiempo estimado: 40 min</p> -->
+                    <p class="mt-4 text-xs text-gray-500 font-bold">Tiempo estimado: 40 min</p>
                 </div>
             </section>
 
@@ -213,7 +213,8 @@
                 </div>
 
                 <!-- The Post (Evidence) -->
-                <div class="w-full md:w-2/3 max-w-md order-1 md:order-2 relative shrink-0">
+                <!-- UPDATED: Added mt-8 for mobile to prevent overlap with header/concepts button -->
+                <div class="w-full md:w-2/3 max-w-md order-1 md:order-2 relative shrink-0 mt-8 md:mt-0">
                     
                     <!-- Simulated FB Post -->
                     <div class="fb-post relative transform transition-transform duration-300 w-full mx-auto">
@@ -335,7 +336,7 @@
     <div id="concepts-modal" class="fixed inset-0 bg-brand-navy/90 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 max-h-[80vh] flex flex-col" id="concepts-content">
             <div class="bg-brand-yellow p-4 text-brand-navy flex justify-between items-center shrink-0">
-                <h3 class="font-black text-lg tracking-wide uppercase"><i class="fas fa-book-open mr-2"></i> Conceptos</h3>
+                <h3 class="font-black text-lg tracking-wide uppercase"><i class="fas fa-book-open mr-2"></i> Conceptos Clave</h3>
                 <button onclick="app.toggleConcepts()" class="bg-white/30 hover:bg-white/60 rounded-full w-8 h-8 flex items-center justify-center transition-colors text-brand-navy">
                     <i class="fas fa-times"></i>
                 </button>
