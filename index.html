@@ -134,7 +134,7 @@
             
             <!-- NEW: Concept Review Button -->
             <button onclick="app.toggleConcepts()" class="bg-brand-yellow text-brand-navy px-3 py-2 rounded-full font-black text-xs md:text-sm shadow-md hover:bg-yellow-300 transition-colors flex items-center gap-2">
-                <i class="fas fa-book-open"></i> Conceptos Clave
+                <i class="fas fa-book-open"></i> Conceptos
             </button>
 
             <div class="hidden md:flex gap-2">
@@ -173,7 +173,7 @@
                         <span>¡Aceptar Misión!</span>
                         <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
                     </button>
-                    <p class="mt-4 text-xs text-gray-500 font-bold">Tiempo estimado: 40 min</p>
+                    <!-- <p class="mt-4 text-xs text-gray-500 font-bold">Tiempo estimado: 40 min</p> -->
                 </div>
             </section>
 
@@ -219,8 +219,9 @@
                     <div class="fb-post relative transform transition-transform duration-300 w-full mx-auto">
                         <!-- Header -->
                         <div class="p-3 md:p-4 flex items-start gap-3 border-b border-gray-100">
-                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden relative shrink-0">
-                                <img src="/api/placeholder/40/40" alt="Avatar" class="w-full h-full object-cover">
+                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden relative shrink-0 border border-gray-200">
+                                <!-- UPDATED: Profile Image -->
+                                <img src="elrubios.png" alt="Avatar" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center gap-1 relative flex-wrap">
@@ -252,19 +253,18 @@
                             </button>
                         </div>
 
-                        <!-- Media Area -->
-                        <div class="relative bg-black w-full h-40 md:h-56 flex items-center justify-center overflow-hidden group">
-                            <!-- Background Placeholder for Game Image -->
-                            <div class="absolute inset-0 bg-gray-800 opacity-60"></div>
-                            <!-- Mock Content -->
-                            <div class="relative z-0 text-center text-white p-4 w-full">
-                                <div class="flex items-center justify-center mb-2 text-2xl md:text-4xl">
-                                    <i class="fab fa-playstation mr-2"></i> 
-                                    <span class="font-bold tracking-tighter">THE LAST OF US</span>
-                                </div>
-                                <div class="text-yellow-400 font-bold tracking-widest text-[10px] md:text-xs uppercase">Revisitado - Episodio 4</div>
-                                <div class="mt-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-red-600 mx-auto flex items-center justify-center shadow-lg">
-                                    <i class="fas fa-play ml-1 text-sm"></i>
+                        <!-- Media Area (UPDATED) -->
+                        <div class="relative w-full bg-black group overflow-hidden">
+                            <!-- Real Thumbnail Image -->
+                            <img src="miniatura.png" alt="Miniatura Video Rubius" class="w-full h-auto object-cover block">
+                            
+                            <!-- Dark Overlay for better contrast on hover -->
+                            <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+
+                            <!-- Play Button Overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-red-600/90 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-200 backdrop-blur-sm">
+                                    <i class="fas fa-play ml-1 text-white text-lg md:text-2xl"></i>
                                 </div>
                             </div>
 
@@ -335,7 +335,7 @@
     <div id="concepts-modal" class="fixed inset-0 bg-brand-navy/90 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm transition-all duration-300 opacity-0">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-all duration-300 max-h-[80vh] flex flex-col" id="concepts-content">
             <div class="bg-brand-yellow p-4 text-brand-navy flex justify-between items-center shrink-0">
-                <h3 class="font-black text-lg tracking-wide uppercase"><i class="fas fa-book-open mr-2"></i> Conceptos Clave</h3>
+                <h3 class="font-black text-lg tracking-wide uppercase"><i class="fas fa-book-open mr-2"></i> Conceptos</h3>
                 <button onclick="app.toggleConcepts()" class="bg-white/30 hover:bg-white/60 rounded-full w-8 h-8 flex items-center justify-center transition-colors text-brand-navy">
                     <i class="fas fa-times"></i>
                 </button>
